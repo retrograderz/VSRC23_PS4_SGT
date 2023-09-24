@@ -1,4 +1,6 @@
-.pio/build/esp-wrover-kit/src/main.cpp.o: src/main.cpp src/main.h \
+.pio/build/esp-wrover-kit/src/main.cpp.o: src/main.cpp \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BluetoothSerial.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
@@ -129,5 +131,11 @@
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- lib/PS4-esp32-master/src/PS4Controller.h lib/PS4-esp32-master/src/ps4.h \
- lib/EEB/EEB.h
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_gap_bt_api.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_bt_defs.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/host/bluedroid/api/include/api/esp_spp_api.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTScan.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTAddress.h \
+ C:/Users/binhphuong/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src/BTAdvertisedDevice.h \
+ src/main.h lib/EEB/EEB.h
