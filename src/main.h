@@ -6,10 +6,12 @@
 // #include <PS4Controller.h>
 // #include <ESP32_Servo.h>
 
+// DC MOTORS
+#define INTAKE 1        
 #define LEFT_MOTOR 2
 #define RIGHT_MOTOR 3
 
-#define INTAKE 1
+// SERVO MOTORS
 #define SHOOTER 2
 #define LIFT 3 
 #define BALL1 4

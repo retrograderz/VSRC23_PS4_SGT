@@ -31,10 +31,10 @@ uint8_t button, LY, Rx, last_button=0;
 
 uint16_t LIMIT_PWM = 4000;
 
-int16_t pwm_left=0, pwm_right=0;
+int16_t pwm_left=0, pwm_right=0, pwm_intake = 0, temp_pulse_shooter;
 int16_t pwm_shake_left = 300, pwm_shake_right = 300; 
 int16_t vel_left, vel_right;
-bool dir_left, dir_right;
+bool dir_left, dir_right, dir_intake;
 
 static bool status_INTAKE, last_stt_INTAKE = 0;
 static bool status_SHOOTER,last_stt_SHOOTER = 0;
@@ -126,11 +126,23 @@ void loop() {
       // intake - SQUARE
       if (status_INTAKE == 1) {
               Serial.println("intake_on");
-              SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
+              // SERVO.Pulse(INTAKE_PULSE_0, INTAKE); 
               SERVO.Pulse(SHOOTER_PULSE_0, SHOOTER);
+              
+              for (uint16_t i = 0; i < 100; i++) {
+                if (pwm_intake < LIMIT_PWM) {
+                  pwm_intake += 200; 
+                  VSRC_Motor.Run(INTAKE, pwm_intake, 0);
+                  delay(5);
+                } else {
+                  pwm_intake = LIMIT_PWM; break;
+                }
+              }
+              
       } else {
               Serial.println("intake_off");
-              SERVO.Pulse(INTAKE_PULSE_1, INTAKE);
+              // SERVO.Pulse(INTAKE_PULSE_1, INTAKE);
+              pwm_intake = 0;
               SERVO.Pulse(SHOOTER_PULSE_0, SHOOTER);
       }
     }
@@ -142,12 +154,26 @@ void loop() {
           // shooter - CROSS
       if (status_SHOOTER == 1) {
               Serial.println("shooter_on");
-              SERVO.Pulse(SHOOTER_PULSE_1, SHOOTER);
-              SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
+
+              temp_pulse_shooter = 0;
+              for (uint16_t i = 0; i < 100; i++) {
+                if (temp_pulse_shooter < SHOOTER_PULSE_1) {
+                  temp_pulse_shooter += 200;
+                  SERVO.Pulse(temp_pulse_shooter, SHOOTER);
+                  delay(5);
+                } else {
+                  temp_pulse_shooter = SHOOTER_PULSE_1; break;
+                }
+              }
+
+              SERVO.Pulse(temp_pulse_shooter, SHOOTER);
+              pwm_intake = 0;
+              // SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
       } else {
               Serial.println("shooter_off");
               SERVO.Pulse(SHOOTER_PULSE_0, SHOOTER);
-              SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
+              pwm_intake = 0;
+              // SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
       }
     }
     break;
@@ -202,4 +228,5 @@ void loop() {
 
   VSRC_Motor.Run(LEFT_MOTOR, pwm_left, dir_left);
   VSRC_Motor.Run(RIGHT_MOTOR, pwm_right, dir_right);
+  VSRC_Motor.Run(INTAKE, pwm_intake, 0);
 }
