@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "BluetoothSerial.h"
 #include "main.h"
 
@@ -16,8 +17,8 @@ void setup() {
   SERVO.Pulse(LIFT_PULSE_0, LIFT);
   SERVO.Pulse(SHOOTER_PULSE_0, SHOOTER);
   SERVO.Pulse(INTAKE_PULSE_0, INTAKE);
-  SERVO.Angle(BALL_INIT_ANGLE, BALL1);
-  SERVO.Angle(BALL_INIT_ANGLE, BALL2);
+  SERVO.Angle(BALL1_INIT_ANGLE, BALL1);
+  SERVO.Angle(BALL2_INIT_ANGLE, BALL2);
   SerialBT.begin("VSRC - SGT"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
 }
@@ -32,9 +33,9 @@ uint8_t button, LY, Rx, last_button=0;
 uint16_t LIMIT_PWM = 4000;
 
 int16_t pwm_left=0, pwm_right=0, pwm_intake = 0, temp_pulse_shooter;
-int16_t pwm_shake_left = 300, pwm_shake_right = 300; 
+int16_t pwm_shake_left = 800, pwm_shake_right = 800; 
 int16_t vel_left, vel_right;
-bool dir_left, dir_right, dir_intake;
+bool dir_left, dir_right, dir_intake = 1;
 
 static bool status_INTAKE, last_stt_INTAKE = 0;
 static bool status_SHOOTER,last_stt_SHOOTER = 0;
@@ -100,8 +101,9 @@ void loop() {
     check_button_time = millis();
   }
 
-  switch (button) {
+  switch (button) { 
     case L3: // lift
+
     if(status_LIFT == last_stt_LIFT){
       status_LIFT = !status_LIFT;
         // lift - can gat - L3
@@ -118,6 +120,7 @@ void loop() {
               SERVO.Pulse(SHOOTER_PULSE_0, SHOOTER);
       }
     }
+    
     break;
 
     case SQUARE:
@@ -132,8 +135,8 @@ void loop() {
               for (uint16_t i = 0; i < 100; i++) {
                 if (pwm_intake < LIMIT_PWM) {
                   pwm_intake += 200; 
-                  VSRC_Motor.Run(INTAKE, pwm_intake, 0);
-                  delay(5);
+                  VSRC_Motor.Run(INTAKE, pwm_intake, dir_intake);
+                  delay(40);
                 } else {
                   pwm_intake = LIMIT_PWM; break;
                 }
@@ -155,12 +158,12 @@ void loop() {
       if (status_SHOOTER == 1) {
               Serial.println("shooter_on");
 
-              temp_pulse_shooter = 0;
+              temp_pulse_shooter = 800;
               for (uint16_t i = 0; i < 100; i++) {
                 if (temp_pulse_shooter < SHOOTER_PULSE_1) {
-                  temp_pulse_shooter += 200;
+                  temp_pulse_shooter += 10;
                   SERVO.Pulse(temp_pulse_shooter, SHOOTER);
-                  delay(5);
+                  delay(33);
                 } else {
                   temp_pulse_shooter = SHOOTER_PULSE_1; break;
                 }
@@ -184,12 +187,12 @@ void loop() {
         // nap bong - TRIANGLE
       if (status_BALL == 1) {
               Serial.println("ball_on");
-              SERVO.Angle(BALL_GOAL_ANGLE, BALL1);
-              SERVO.Angle(BALL_GOAL_ANGLE, BALL2);
+              SERVO.Angle(BALL1_GOAL_ANGLE, BALL1);
+              SERVO.Angle(BALL2_GOAL_ANGLE, BALL2);
       } else {
               Serial.println("ball_off");
-              SERVO.Angle(BALL_INIT_ANGLE, BALL1);
-              SERVO.Angle(BALL_INIT_ANGLE, BALL2);
+              SERVO.Angle(BALL1_INIT_ANGLE, BALL1);
+              SERVO.Angle(BALL2_INIT_ANGLE, BALL2);
       }
     }
     break;
@@ -201,7 +204,7 @@ void loop() {
               Serial.println("shake"); // trai qua phai 
               VSRC_Motor.Run(LEFT_MOTOR, pwm_shake_left, 1);
               VSRC_Motor.Run(RIGHT_MOTOR, pwm_shake_right, 0);
-              delay(100);
+              delay(500);
               VSRC_Motor.Run(LEFT_MOTOR, pwm_shake_left, 0);
               VSRC_Motor.Run(RIGHT_MOTOR, pwm_shake_right, 1);
               
@@ -209,7 +212,7 @@ void loop() {
               Serial.println("shake"); // phai qua trai
               VSRC_Motor.Run(LEFT_MOTOR, pwm_shake_left, 0);
               VSRC_Motor.Run(RIGHT_MOTOR, pwm_shake_right, 1);
-              delay(100);
+              delay(500);
               VSRC_Motor.Run(LEFT_MOTOR, pwm_shake_left, 1);
               VSRC_Motor.Run(RIGHT_MOTOR, pwm_shake_right, 0);
       }
@@ -228,5 +231,5 @@ void loop() {
 
   VSRC_Motor.Run(LEFT_MOTOR, pwm_left, dir_left);
   VSRC_Motor.Run(RIGHT_MOTOR, pwm_right, dir_right);
-  VSRC_Motor.Run(INTAKE, pwm_intake, 0);
+  VSRC_Motor.Run(INTAKE, pwm_intake, dir_intake);
 }
